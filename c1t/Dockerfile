@@ -21,7 +21,7 @@ FROM busybox:latest
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
 ARG VCS_REF="NULL"
-ARG CONFIG_NAME="carma-config:unspecified"
+ARG CONFIG_NAME="c1t:test"
 
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.name=${CONFIG_NAME}
