@@ -16,7 +16,7 @@
 # GENERIC Template for CARMA Configuration Dockerfiles
 # Do not invoke directly, symlink into configuration folders below and invoke from there
 
-FROM busybox:latest
+FROM arm64v8/busybox:latest
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
