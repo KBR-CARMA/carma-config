@@ -12,17 +12,14 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-
-# GENERIC Template for CARMA Configuration Dockerfiles
-# Do not invoke directly, symlink into configuration folders below and invoke from there
-
-FROM busybox:latest
-
+FROM arm64v8/busybox:latest
+ARG CONFIG
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
 ARG VCS_REF="NULL"
-ARG CONFIG_NAME="carma-config:unspecified"
+ARG CONFIG_NAME="carma-config:${CONFIG}"
 
+# Metadata
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.name=${CONFIG_NAME}
 LABEL org.label-schema.description="System configuration data for the CARMA Platform"
@@ -33,7 +30,21 @@ LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-config"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-ADD . /root/vehicle
-VOLUME /opt/carma/vehicle
+# Copy the vehicle calibration
+RUN     mkdir -p /opt/carma  \
+    &&  mkdir -p /opt/carma/vehicle/calibration \
+    &&  mkdir -p /opt/carma/vehicle/config
+COPY ./example_opt_carma/ /opt/carma/
+COPY ./example_calibration_folder/vehicle/calibration/ /opt/carma/vehicle/calibration/
+COPY ./${CONFIG}/* /opt/carma/vehicle/config/
 
-CMD  cp /root/vehicle/* /opt/carma/vehicle
+# Fix permissions
+RUN chown -R 1000:1000 /opt/carma
+
+# Declare the volume
+VOLUME /opt/carma/.ros
+VOLUME /opt/carma/logs
+VOLUME /opt/carma/maps
+VOLUME /opt/carma/routes
+VOLUME /opt/carma/vehicle
+VOLUME /opt/carma/yolo
