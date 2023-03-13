@@ -4,16 +4,16 @@
 
 # String: Host vehicle make
 # Value type: Measured
-vehicle_make: 'Ford'
+vehicle_make: 'C1tenth'
 
 # String: Host vehicle model
 # Value type: Measured
-vehicle_model: 'Fusion'
+vehicle_model: 'Truck'
 
 # Integer: Host vehicle year
 # Value type: Measured
 # Units: Year
-vehicle_year: 2019
+vehicle_year: 2023
 
 # Double: Host vehicle length
 # Value type: Measured
@@ -87,12 +87,11 @@ car: true
 
 # Required drivers for the vehicle to be functional
 required_drivers:
-  - /hardware_interface/ssc_interface_wrapper
+  - /hardware_interface/vesc_ros2_driver_wrapper
 lidar_gps_drivers:
-  - /hardware_interface/velodyne_lidar_driver_wrapper
-  - /hardware_interface/novatel_gps_nodelet_wrapper
+  - /hardware_interface/sllidar_ros2_driver_wrapper
+  - /hardware_interface/bno055_ros2_driver_wrapper
 camera_drivers:
-  - /hardware_interface/camera
 
 # Vehicle Participation Type corresponding to the Lanelet2 participant type standards. 
 # Used for interpreting traffic rules in world model instances
