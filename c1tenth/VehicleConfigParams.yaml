@@ -4,7 +4,7 @@
 
 # String: Host vehicle make
 # Value type: Measured
-vehicle_make: 'C1tenth'
+vehicle_make: 'C1Tenth'
 
 # String: Host vehicle model
 # Value type: Measured
@@ -18,27 +18,27 @@ vehicle_year: 2023
 # Double: Host vehicle length
 # Value type: Measured
 # Units: Meters
-vehicle_length: 5.0
+vehicle_length: 0.52
 
 # Double: Host vehicle width
 # Value type: Measured
 # Units: Meters
-vehicle_width: 2.5
+vehicle_width: 0.187
 
 # Double: Host vehicle height
 # Value type: Measured
 # Units: Meters
-vehicle_height: 2.0
+vehicle_height: 0.293
 
 # Double: Distance from front axel to rear axel
 # Value type: Measured
 # Units: Meters
-vehicle_wheel_base: 2.85
+vehicle_wheel_base: 0.447
 
 # Double: Radius of the tires
 # Value type: Measured
 # Units: Meters
-vehicle_tire_radius: 0.39
+vehicle_tire_radius: 0.041
 
 # Acceleration limit
 # Value type: Desired
@@ -68,15 +68,15 @@ vehicle_max_curvature_rate: 0.75
 # Ratio relating the steering wheel angle and the tire position on the road
 # Value type: Measured
 # (radians of a full steering wheel rotation) / (radians of tires with the longitudinal axis under full steer)
-vehicle_steering_gear_ratio: 14.8
+vehicle_steering_gear_ratio: 16.863
 
 # Maximum steering angle of the wheel relative to the vehicle centerline.
 # Value type: Measured
 # Unit: deg
-vehicle_steer_lim_deg: 32.9
+vehicle_steer_lim_deg: 29.2
 
 # steering dynamics time constant 
-# Value type: Measured 
+# Value type: Measured
 # Unit: s
 vehicle_model_steer_tau : 0.3
 
@@ -91,7 +91,6 @@ required_drivers:
 lidar_gps_drivers:
   - /hardware_interface/sllidar_ros2_driver_wrapper
   - /hardware_interface/bno055_ros2_driver_wrapper
-camera_drivers:
 
 # Vehicle Participation Type corresponding to the Lanelet2 participant type standards. 
 # Used for interpreting traffic rules in world model instances
@@ -153,6 +152,49 @@ excluded_default_topics:
   - /hardware_interface/lightbar/light_bar_status   
   - /hardware_interface/lightbar_manager/indicator_control 
   - /hardware_interface/module_states 
+  - /hardware_interface/pacmod/as_rx/accel_cmd
+  - /hardware_interface/pacmod/as_rx/brake_cmd
+  - /hardware_interface/pacmod/as_rx/shift_cmd  
+  - /hardware_interface/pacmod/as_rx/steer_cmd
+  - /hardware_interface/pacmod/as_rx/turn_cmd  
+  - /hardware_interface/pacmod/as_tx/all_system_statuses 
+  - /hardware_interface/pacmod/as_tx/enabled 
+  - /hardware_interface/pacmod/as_tx/vehicle_speed  
+  - /hardware_interface/pacmod/can_rx
+  - /hardware_interface/pacmod/can_tx
+  - /hardware_interface/pacmod/parsed_tx/accel_aux_rpt   
+  - /hardware_interface/pacmod/parsed_tx/accel_rpt
+  - /hardware_interface/pacmod/parsed_tx/brake_aux_rpt   
+  - /hardware_interface/pacmod/parsed_tx/brake_rpt
+  - /hardware_interface/pacmod/parsed_tx/brake_rpt_detail_1 
+  - /hardware_interface/pacmod/parsed_tx/brake_rpt_detail_2 
+  - /hardware_interface/pacmod/parsed_tx/brake_rpt_detail_3 
+  - /hardware_interface/pacmod/parsed_tx/component_rpt  
+  - /hardware_interface/pacmod/parsed_tx/cruise_control_buttons_rpt  
+  - /hardware_interface/pacmod/parsed_tx/engine_brake_rpt  
+  - /hardware_interface/pacmod/parsed_tx/engine_rpt 
+  - /hardware_interface/pacmod/parsed_tx/global_rpt 
+  - /hardware_interface/pacmod/parsed_tx/hazard_lights_rpt 
+  - /hardware_interface/pacmod/parsed_tx/headlight_aux_rpt   
+  - /hardware_interface/pacmod/parsed_tx/headlight_rpt  
+  - /hardware_interface/pacmod/parsed_tx/horn_rpt 
+  - /hardware_interface/pacmod/parsed_tx/marker_lamp_rpt 
+  - /hardware_interface/pacmod/parsed_tx/parking_brake_status_rpt 
+  - /hardware_interface/pacmod/parsed_tx/shift_aux_rpt   
+  - /hardware_interface/pacmod/parsed_tx/shift_rpt  
+  - /hardware_interface/pacmod/parsed_tx/sprayer_rpt 
+  - /hardware_interface/pacmod/parsed_tx/steer_aux_rpt   
+  - /hardware_interface/pacmod/parsed_tx/steer_rpt
+  - /hardware_interface/pacmod/parsed_tx/steer_rpt_detail_1 
+  - /hardware_interface/pacmod/parsed_tx/steer_rpt_detail_2 
+  - /hardware_interface/pacmod/parsed_tx/steer_rpt_detail_3 
+  - /hardware_interface/pacmod/parsed_tx/turn_aux_rpt
+  - /hardware_interface/pacmod/parsed_tx/turn_rpt  
+  - /hardware_interface/pacmod/parsed_tx/vehicle_speed_rpt   
+  - /hardware_interface/pacmod/parsed_tx/vin_rpt
+  - /hardware_interface/pacmod/parsed_tx/wheel_speed_rpt 
+  - /hardware_interface/pacmod/parsed_tx/wiper_aux_rpt   
+  - /hardware_interface/pacmod/parsed_tx/wiper_rpt  
   - /hardware_interface/speed_model_config   
   - /hardware_interface/speed_pedals  
   - /hardware_interface/steering_command_echo  
