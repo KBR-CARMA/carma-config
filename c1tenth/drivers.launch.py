@@ -26,6 +26,7 @@ from launch.actions import GroupAction
 from launch.actions import Shutdown
 from launch_ros.actions import PushRosNamespace
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 from carma_ros2_utils.launch.get_log_level import GetLogLevel
 import uuid
 
@@ -50,7 +51,7 @@ def generate_launch_description():
 
     drivers = LaunchConfiguration('drivers')
     declare_drivers_arg = DeclareLaunchArgument(
-        name = 'drivers', default_value = 'dsrc_driver velodyne_lidar_driver_wrapper', description = "Desired drivers to launch specified by package name."
+        name = 'drivers', default_value = 'dsrc_driver lidar_driver imu_driver vesc_driver joy_driver', description = "Desired drivers to launch specified by package name."
     )
 
     # Launch shutdown node which will ensure the launch file gets closed on system shutdown even if in a separate container
@@ -74,39 +75,60 @@ def generate_launch_description():
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([ FindPackageShare('dsrc_driver'), '/launch/dsrc_driver.py']),
                 launch_arguments = { 
-                    'log_level' : GetLogLevel('dsrc_driver', env_log_levels),
-                    }.items()
+                    'composable' : 'False',
+                }.items()
+            ),
+        ]
+    )
+
+    vesc_group = GroupAction(
+        condition=IfCondition(PythonExpression(["'vesc_driver' in '", drivers, "'.split()"])),
+        actions=[
+            PushRosNamespace(EnvironmentVariable('CARMA_INTR_NS', default_value='hardware_interface')),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([ FindPackageShare('vesc_ros2_driver_wrapper'), '/launch/vesc_ros2_driver_wrapper.launch.py']),
+                launch_arguments = { 
+                    'composable' : 'False',
+                }.items()
+            ),
+        ]
+    )
+    
+    imu_group = GroupAction(
+        condition=IfCondition(PythonExpression(["'imu_driver' in '", drivers, "'.split()"])),
+        actions=[
+            PushRosNamespace(EnvironmentVariable('CARMA_INTR_NS', default_value='hardware_interface')),
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([ FindPackageShare('bno055_ros2_driver_wrapper'), '/launch/bno055_ros2_driver_wrapper.launch.py']),
+                launch_arguments = { 
+                    'composable' : 'False',
+                }.items()
             ),
         ]
     )
 
     lidar_group = GroupAction(
-        condition=IfCondition(PythonExpression(["'velodyne_lidar_driver_wrapper' in '", drivers, "'.split()"])),
+        condition=IfCondition(PythonExpression(["'lidar_driver' in '", drivers, "'.split()"])),
         actions=[
             PushRosNamespace(EnvironmentVariable('CARMA_INTR_NS', default_value='hardware_interface')),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([ FindPackageShare('velodyne_lidar_driver_wrapper'), '/launch/velodyne_lidar_driver_wrapper_launch.py']),
+                PythonLaunchDescriptionSource([ FindPackageShare('sllidar_ros2_driver_wrapper'), '/launch/sllidar_ros2_driver_wrapper.launch.py']),
                 launch_arguments = { 
-                    'log_level' : GetLogLevel('velodyne_lidar_driver_wrapper', env_log_levels),
-                    'device_ip' : '192.168.1.201',
-                    'port' : '2368'
-                    }.items()
+                    'composable' : 'False',
+                }.items()
             ),
         ]
     )
 
-    gnss_ins_group = GroupAction(
-        condition=IfCondition(PythonExpression(["'carma_novatel_driver_wrapper' in '", drivers, "'.split()"])),
+    joy_group = GroupAction(
+        condition=IfCondition(PythonExpression(["'joy_group' in '", drivers, "'.split()"])),
         actions=[
             PushRosNamespace(EnvironmentVariable('CARMA_INTR_NS', default_value='hardware_interface')),
             IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([ FindPackageShare('carma_novatel_driver_wrapper'), '/launch/carma-novatel-driver-wrapper-launch.py']),
+                PythonLaunchDescriptionSource([ FindPackageShare('joy_ros2_driver_wrapper'), '/launch/joy_ros2_driver_wrapper.launch.py']),
                 launch_arguments = { 
-                    'log_level' : GetLogLevel('carma_novatel_driver_wrapper', env_log_levels),
-                    'ip_addr' : '192.168.88.29',
-                    'port' : '2000',
-                    'vehicle_calibration_dir' : vehicle_calibration_dir,
-                    }.items()
+                    'composable' : 'False',
+                }.items()
             ),
         ]
     )
@@ -117,6 +139,8 @@ def generate_launch_description():
         declare_vehicle_config_dir_arg,
         driver_shutdown_group,
         dsrc_group,
+        vesc_group,
+        imu_group,
         lidar_group,
-        gnss_ins_group
+        joy_group
     ])

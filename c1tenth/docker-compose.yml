@@ -23,7 +23,7 @@ services:
     volumes_from:
       - container:carma-config:ro
     environment:
-      - ROS_IP=192.168.88.10
+      - ROS_IP=192.168.0.100
     volumes:
       - /opt/carma/.ros:/home/carma/.ros
       - /opt/carma/logs:/opt/carma/logs
@@ -37,7 +37,7 @@ services:
     volumes_from:
       - container:carma-config:ro
     environment:
-      - ROS_IP=192.168.88.10
+      - ROS_IP=192.168.0.100
       - NVIDIA_VISIBLE_DEVICES=all
     runtime: nvidia
     volumes:
@@ -55,6 +55,10 @@ services:
     container_name: platform_ros2
     volumes_from:
       - container:carma-config:ro
+    environment:
+      - ROS_IP=192.168.0.100
+      - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia
     volumes:
       - /opt/carma/logs:/opt/carma/logs
       - /opt/carma/.ros:/home/carma/.ros
@@ -71,7 +75,7 @@ services:
     volumes_from:
       - container:carma-config:ro
     environment:
-      - ROS_IP=192.168.88.10
+      - ROS_IP=192.168.0.100
       - ROS_MASTER_URI=http://localhost:11311
     volumes:
       - /opt/carma/logs:/opt/carma/logs
@@ -93,7 +97,7 @@ services:
       - /opt/carma/.ros:/home/carma/.ros
       - /opt/carma/vehicle/calibration:/opt/carma/vehicle/calibration
     environment:
-      - ROS_IP=192.168.88.10
+      - ROS_IP=192.168.0.100
     command: bash -c 'export ROS_NAMESPACE=$${CARMA_INTR_NS} && wait-for-it.sh localhost:11311 -- roslaunch /opt/carma/vehicle/config/drivers.launch drivers:=lightbar_driver'
 
   cohda_dsrc_driver:
@@ -111,18 +115,16 @@ services:
     image: usdotfhwastol/carma-ssc-interface-wrapper:carma-system-4.2.0
     container_name: ssc_controller_driver
     network_mode: host
-    privileged: true # Grant access to usb for can data
-    devices: # Data speed can tool at bus 1 device 3
-      - /dev/bus/usb/001/003:/dev/bus/usb/001/003
+    privileged: true # Grant access to kvaser
     volumes_from:
       - container:carma-config:ro
     environment:
-      - ROS_IP=192.168.88.10
+      - ROS_IP=192.168.0.100
     volumes:
       - /opt/carma/logs:/opt/carma/logs
       - /opt/carma/.ros:/home/carma/.ros
       - /opt/carma/vehicle/calibration:/opt/carma/vehicle/calibration
-    command: bash -c 'export ROS_NAMESPACE=$${CARMA_INTR_NS} && wait-for-it.sh localhost:11311 -- roslaunch /opt/carma/vehicle/config/drivers.launch drivers:=ssc_interface_wrapper'
+    command: bash -c 'source /opt/carma/install_ros2/setup.bash && ros2 launch /opt/carma/vehicle/config/drivers.launch.py drivers:=ssc_interface_wrapper_ros2'
 
   novatel_gnss_imu_driver:
     image: usdotfhwastol/carma-novatel-oem7-driver-wrapper:carma-system-4.2.0
@@ -161,7 +163,7 @@ services:
       - /opt/carma/.ros:/home/carma/.ros
       - /opt/carma/data:/opt/carma/data
     environment:
-      - ROS_IP=192.168.88.10
+      - ROS_IP=192.168.0.100
     command: bash -c 'export ROS_NAMESPACE=$${CARMA_INTR_NS} && wait-for-it.sh localhost:11311 -- roslaunch carma mock_drivers.launch mock_drivers:=camera'
   
   # TODO DelphiESR Front Driver Node

@@ -16,7 +16,7 @@
 # GENERIC Template for CARMA Configuration Dockerfiles
 # Do not invoke directly, symlink into configuration folders below and invoke from there
 
-FROM arm64v8/busybox:latest
+FROM busybox:latest
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
@@ -33,12 +33,7 @@ LABEL org.label-schema.vcs-url="https://github.com/usdot-fhwa-stol/carma-config"
 LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
-
-
-COPY . /opt/carma/vehicle/config
-
-# Fix permissions
-RUN chown -R 1000:1000 /opt/carma
-
-# Declare the volume
+ADD . /root/vehicle/config
 VOLUME /opt/carma/vehicle/config
+
+CMD  cp /root/vehicle/config/* /opt/carma/vehicle/config
